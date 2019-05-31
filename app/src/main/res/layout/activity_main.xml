@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--main-->
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+        <!--header-->
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbarLayout"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="300dp">
+
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:background="#ff2233"/>
+            
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                
+                <com.robinhood.ticker.TickerView
+                    android:id="@+id/tickerview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="0.0"
+                    android:textSize="50sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"/>
+
+                <TextView
+                    android:layout_toRightOf="@+id/tickerview"
+                    android:layout_centerVertical="true"
+                    android:text="￥"
+                    android:textSize="50sp"
+                    android:textColor="#ff4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_DisplayWeek"
+                    android:layout_below="@+id/tickerview"
+                    android:layout_centerHorizontal="true"
+                    android:text="Monday"
+                    android:textSize="25sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                
+            </RelativeLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <!--body-->
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>
