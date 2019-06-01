@@ -12,7 +12,7 @@ public class DateUtil {
     }
 
     public static String getFormatTime(long timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         return dateFormat.format(timestamp);
     }
 

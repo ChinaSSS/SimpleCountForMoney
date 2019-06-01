@@ -5,7 +5,8 @@ import java.util.UUID;
 public class Record {
 
     private TYPE type ;
-    private String category ;
+//    private String category ;
+    private Category category;
     private double amount ;
     private String remark ;
     private String uuid ;
@@ -30,11 +31,15 @@ public class Record {
         }else this.type =TYPE.INCOME;
     }
 
-    public String getCategory() {
+    public void setType(TYPE type){
+        this.type = type;
+    }
+
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

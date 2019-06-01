@@ -16,7 +16,7 @@
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="300dp">
+            android:layout_height="250dp">
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
@@ -62,7 +62,18 @@
         </android.support.design.widget.AppBarLayout>
 
         <!--body-->
+        <include layout="@layout/main_body"/>
 
+        <!--floating button-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add"
+            android:background="@drawable/floatingbutton_bg"
+            app:layout_anchor="@id/appbarLayout"
+            app:layout_anchorGravity="bottom|right"
+            android:layout_marginRight="20dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 
