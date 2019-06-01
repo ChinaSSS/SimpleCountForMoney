@@ -25,6 +25,7 @@ public class RecordDBHelper extends SQLiteOpenHelper {
                 "type integer ," +
                 "amount double," +
                 "category text ," +
+                "imageId integer," +
                 "uuid text," +
                 "timestamp integer ," +
                 "date date ," +
@@ -43,7 +44,8 @@ public class RecordDBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("type",record.getType());
         cv.put("amount",record.getAmount());
-        cv.put("category",record.getCategory());
+        cv.put("category",record.getCategory().getName());
+        cv.put("imageId",record.getCategory().getImageId());
         cv.put("uuid",record.getUuid());
         cv.put("timestamp",record.getTimestamp());
         cv.put("date",record.getDate());
@@ -64,11 +66,17 @@ public class RecordDBHelper extends SQLiteOpenHelper {
         addRecord(record);
     }
 
-    public LinkedList<Record> searchRecords(String date_index){
+    public LinkedList<Record> searchRecords(String date_index,arrangeMode mode){
         LinkedList<Record> records = new LinkedList<>();
         Record record = null;
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery("select distinct * from records where date=? order by timestamp asc",new String[]{date_index});
+        Cursor cursor;
+        //根据模式切换排列
+        if(mode == arrangeMode.ASC){
+            cursor = db.rawQuery("select distinct * from records where date=? order by timestamp asc",new String[]{date_index});
+        }else {
+            cursor = db.rawQuery("select distinct * from records where date=? order by timestamp desc",new String[]{date_index});
+        }
         if(cursor.moveToFirst()){
             do {
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
@@ -78,12 +86,16 @@ public class RecordDBHelper extends SQLiteOpenHelper {
                 int timestamp = cursor.getInt(cursor.getColumnIndex("timestamp"));
                 String date  = cursor.getString(cursor.getColumnIndex("date"));
                 String remarks = cursor.getString(cursor.getColumnIndex("remarks"));
+                int imageId = cursor.getInt(cursor.getColumnIndex("imageId"));
+                Category category1 = new Category();
+                category1.setName(category);
+                category1.setImageId(imageId);
 
                 record = new Record();
                 record.setType(type);
                 record.setAmount(amount);
                 record.setUuid(uuid);
-                record.setCategory(category);
+                record.setCategory(category1);
                 record.setTimestamp(timestamp);
                 record.setDate(date);
                 record.setRemark(remarks);
