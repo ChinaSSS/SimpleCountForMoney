@@ -78,10 +78,9 @@ public class MainFrame extends Fragment {
     }
 
     public void addListenerToListView(){
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // to del or edit
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ItemsDialogFragment itemsDialogFragment = new ItemsDialogFragment();
                 itemsDialogFragment.show("", new String[]{"编辑", "删除"}, getFragmentManager(), new DialogInterface.OnClickListener() {
                     @Override
@@ -96,6 +95,7 @@ public class MainFrame extends Fragment {
                         }
                     }
                 });
+                return true;
             }
         });
     }
