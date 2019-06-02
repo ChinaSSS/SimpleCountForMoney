@@ -107,6 +107,11 @@ public class RecordDBHelper extends SQLiteOpenHelper {
                 db.close();
             }
         }
+        if(record != null){
+            Log.d(TAG,"从数据库中读取的数据 :"+record.toString());
+        }else {
+            Log.d(TAG,"数据都被你删光了呢");
+        }
         return records;
     }
 
@@ -118,7 +123,6 @@ public class RecordDBHelper extends SQLiteOpenHelper {
             do {
                 String date = cursor.getString(cursor.getColumnIndex("date"));
                 dates.add(date);
-                Log.d(TAG,"数据库里获得的日期 : "+date);
             }while (cursor.moveToNext());
         }
         if(db != null){

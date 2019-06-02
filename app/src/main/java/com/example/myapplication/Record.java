@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Record {
+// to serializable for transport
+public class Record implements Serializable {
 
     private TYPE type ;
 //    private String category ;
@@ -81,5 +83,18 @@ public class Record {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Record{" +
+                "type=" + type +
+                ", category.name=" + category.getName() +
+                ", amount=" + amount +
+                ", remark='" + remark + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", date='" + date + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

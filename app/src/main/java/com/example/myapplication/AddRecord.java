@@ -201,7 +201,7 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
         // to return the sign
 //        setResult(RESULT_OK,new Intent());
         //这里也是这样，不管有没有这个返回函数都返回的是0 ，说明还有更后一步的操作返回了???
-        //有点诡异,后期弄懂
+        //有点诡异,后期弄懂f
     }
 
     @Override

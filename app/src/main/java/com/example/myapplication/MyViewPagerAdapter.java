@@ -52,6 +52,9 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
                 m.Flush_mainFrame();
             }
         }
+        else {
+            Log.d(TAG," the frames is null");
+        }
     }
 
     public double getCountMoneyOfFragment_I(int i){
