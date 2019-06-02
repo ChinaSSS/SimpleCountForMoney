@@ -2,10 +2,12 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +32,13 @@ public class MainFrame extends Fragment {
     private String date = "";
     private MyListViewAdapter listViewAdapter ;
     private LinkedList<Record> records = new LinkedList<>();
+    private LocalBroadcastManager localBroadcastManager;
+    private Intent FlushMoneyInTickerView = new Intent(MainActivity.BraodcastFlitterMessage);
 
     public MainFrame(String date){
         this.date = date;
         records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
+        localBroadcastManager = LocalBroadcastManager.getInstance(GlobalResourceMannager.getInstance().getContext());
     }
 
     //此方法耗时
@@ -58,15 +63,22 @@ public class MainFrame extends Fragment {
     }
 
     public void Flush_mainFrame(){
-        if(listViewAdapter == null){
-            listViewAdapter = new MyListViewAdapter(getContext());
-        }
-        // to flush data
         records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
-        adapterListview();
+        if(records.size() != 0){
+            if(listViewAdapter == null){
+                listViewAdapter = new MyListViewAdapter(getContext());
+            }
+            // to flush data
+            adapterListview();
+        }else {
+            //如果数据被删完了,无法刷新逻辑，就隐藏
+            relativeLayout_one.setVisibility(View.GONE);
+            relativeLayout_two.setVisibility(View.VISIBLE);
+        }
     }
 
     public void adapterListview(){
+        records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
         listViewAdapter.setRecords(records);//传递records
         listViewAdapter.notifyDataSetChanged();
         listView.setAdapter(listViewAdapter);
@@ -82,17 +94,18 @@ public class MainFrame extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ItemsDialogFragment itemsDialogFragment = new ItemsDialogFragment();
-                itemsDialogFragment.show("", new String[]{"编辑", "删除"}, getFragmentManager(), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case 0:
-                                // to edit
-                                break;
-                            case 1:
-                                //to del
-                                break;
-                        }
+                itemsDialogFragment.show("", new String[]{"编辑", "删除"}, getFragmentManager(), (dialog, which) -> {
+                    switch (which){
+                        case 0:
+                            // to edit
+
+                            break;
+                        case 1:
+                            //to del
+                            if(records.get(position)!=null){
+                                del(records.get(position).getUuid());
+                            }
+                            break;
                     }
                 });
                 return true;
@@ -102,7 +115,21 @@ public class MainFrame extends Fragment {
 
     public double getCountMoneyByListviewAdapter(){
         Flush_mainFrame();
+        // to flush money in tickerview
         return listViewAdapter.CountMoney();
+    }
+
+    public void del(String uuid){
+        //del the record by uuid in database
+        GlobalResourceMannager.getInstance().getHelper().removeRecordd(uuid);
+        //flush all the frame , it is so stupid
+        Flush_mainFrame();
+        //to flush the money in tickerview in main activity by local broadcast
+        localBroadcastManager.sendBroadcast(FlushMoneyInTickerView);
+    }
+
+    public void edit(){
+
     }
 
 }
