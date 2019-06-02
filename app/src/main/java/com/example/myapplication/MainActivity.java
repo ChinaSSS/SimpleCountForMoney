@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity{
     private FloatingActionButton floatingActionButton;
     private LocalBroadCastReciver localBroadCastReciver;
     private LocalBroadcastManager localBroadcastManager;
+    private int CurrentPagerPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity{
         viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setCurrentItem(viewPagerAdapter.getCurrentFrame());
+        CurrentPagerPosition = viewPagerAdapter.getCurrentFrame();
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity{
             public void onPageSelected(int i) {
                 if(viewPagerAdapter != null){
                     double money = viewPagerAdapter.getCountMoneyOfFragment_I(i);
+                    CurrentPagerPosition = i;
                     tickerView.setText(String.valueOf(money));
                 }
             }
@@ -96,7 +99,6 @@ public class MainActivity extends AppCompatActivity{
             case RequestCode:
                 if(resultCode == RESULT_OK || resultCode == RESULT_FIRST_USER){
                     if(viewPagerAdapter == null){
-                        Log.d(TAG," the viewpager is null");
                         adapterviewPager();
                     }
                     viewPagerAdapter.Flash_PagerAdapter();
@@ -110,20 +112,21 @@ public class MainActivity extends AppCompatActivity{
 
     public void setCurrentMoney(){
         double count = 0;
-        LinkedList<String> avaliableDate = GlobalResourceMannager.getInstance().getHelper().getAvaliableDate();
-        if(avaliableDate.size() != 0){
-            String s = avaliableDate.get(avaliableDate.size() - 1);
-            LinkedList<Record> records = GlobalResourceMannager.getInstance().getHelper().searchRecords(s, arrangeMode.DESC);
-            for(int i=0;i<records.size();i++){
-                if(records.get(i).getType() == 1){
-                    count = count - records.get(i).getAmount();
-                }else {
-                    count = count + records.get(i).getAmount();
-                }
-            }
-        }else {
-            count = 0.0;
-        }
+//        LinkedList<String> avaliableDate = GlobalResourceMannager.getInstance().getHelper().getAvaliableDate();
+//        if(avaliableDate.size() != 0){
+//            String s = avaliableDate.get(avaliableDate.size() - 1);
+//            LinkedList<Record> records = GlobalResourceMannager.getInstance().getHelper().searchRecords(s, arrangeMode.DESC);
+//            for(int i=0;i<records.size();i++){
+//                if(records.get(i).getType() == 1){
+//                    count = count - records.get(i).getAmount();
+//                }else {
+//                    count = count + records.get(i).getAmount();
+//                }
+//            }
+//        }else {
+//            count = 0.0;
+//        }
+        count = viewPagerAdapter.getCountMoneyOfFragment_I(CurrentPagerPosition);
         tickerView.setText(String.valueOf(count));
     }
 

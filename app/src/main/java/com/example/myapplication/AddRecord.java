@@ -164,6 +164,16 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
                 }
                 //to set data
                 record.setAmount(amount);
+                if(category == null&&(!input.equals(""))){
+                    category = new Category();
+                    if(type == TYPE.EXPEND){
+                        category.setName("一般");
+                        category.setImageId(R.drawable.just_so_so);
+                    }else {
+                        category.setName("工资");
+                        category.setImageId(R.drawable.salary);
+                    }
+                }
                 record.setCategory(category);
                 record.setRemark(remark);
                 record.setType(type);

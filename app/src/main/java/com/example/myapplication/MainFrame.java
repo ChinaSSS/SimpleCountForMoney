@@ -32,7 +32,7 @@ public class MainFrame extends Fragment {
     private View rootview;
     private String date = "";
     private MyListViewAdapter listViewAdapter ;
-    private LinkedList<Record> records = new LinkedList<>();
+    private LinkedList<Record> records;
     private LocalBroadcastManager localBroadcastManager;
     private Intent FlushMoneyInTickerView = new Intent(MainActivity.BraodcastFlitterMessage);
 
@@ -66,10 +66,8 @@ public class MainFrame extends Fragment {
         //adapter list view
         listViewAdapter.notifyDataSetChanged();
         listView.setAdapter(listViewAdapter);
-        if(records.size() == 0){
-            relativeLayout_one.setVisibility(View.GONE);
-        }else {
-            relativeLayout_two.setVisibility(View.GONE);
+        if(records.size() > 0){
+           relativeLayout_two.setVisibility(View.GONE);
         }
         //set listener to list view
         addListenerToListView();
@@ -78,7 +76,7 @@ public class MainFrame extends Fragment {
     public void Flush_mainFrame(){
         records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
         if(listViewAdapter == null){
-            listViewAdapter = new MyListViewAdapter(getActivity().getApplicationContext());
+            listViewAdapter = new MyListViewAdapter(GlobalResourceMannager.getInstance().getContext());
         }
         listViewAdapter.setRecords(records);//传递records
         listView.setAdapter(listViewAdapter);
@@ -109,9 +107,16 @@ public class MainFrame extends Fragment {
     }
 
     public double getCountMoneyByListviewAdapter(){
-        Flush_mainFrame();
-        // to flush money in tickerview
-        return listViewAdapter.CountMoney();
+        // return money
+        double money = 0;
+        for(int i=0;i<records.size();i++){
+            if(records.get(i).getType() == 1){
+                money-=records.get(i).getAmount();
+            }else {
+                money+=records.get(i).getAmount();
+            }
+        }
+        return money;
     }
 
     public void del(String uuid){
