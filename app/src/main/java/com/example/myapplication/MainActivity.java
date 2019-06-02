@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void setCurrentMoney(){
+        double count = 0;
         LinkedList<String> avaliableDate = GlobalResourceMannager.getInstance().getHelper().getAvaliableDate();
         if(avaliableDate.size() != 0){
             String s = avaliableDate.get(avaliableDate.size() - 1);
             LinkedList<Record> records = GlobalResourceMannager.getInstance().getHelper().searchRecords(s, arrangeMode.DESC);
-            double count = 0;
             for(int i=0;i<records.size();i++){
                 if(records.get(i).getType() == 1){
                     count = count - records.get(i).getAmount();
@@ -121,8 +121,10 @@ public class MainActivity extends AppCompatActivity{
                     count = count + records.get(i).getAmount();
                 }
             }
-            tickerView.setText(String.valueOf(count));
+        }else {
+            count = 0.0;
         }
+        tickerView.setText(String.valueOf(count));
     }
 
 

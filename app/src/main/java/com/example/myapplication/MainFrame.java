@@ -29,6 +29,7 @@ public class MainFrame extends Fragment {
     private TextView mtv_display_norecords ;
     private RelativeLayout relativeLayout_one ;
     private RelativeLayout relativeLayout_two ;
+    private View rootview;
     private String date = "";
     private MyListViewAdapter listViewAdapter ;
     private LinkedList<Record> records = new LinkedList<>();
@@ -46,40 +47,23 @@ public class MainFrame extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_frame,container,false);
-        //to do for init view
-        mtv_display_date = view.findViewById(R.id.tv_Display_Date);
-        listView = view.findViewById(R.id.listview);
-        mtv_display_norecords = view.findViewById(R.id.tv_no_records);
-        mtv_display_date.setText(date);
-        relativeLayout_one = view.findViewById(R.id.frame_one);
-        relativeLayout_two = view.findViewById(R.id.frame_two);
+        rootview = inflater.inflate(R.layout.main_frame,container,false);
+        IniteView();
+        return rootview;
+    }
 
+    public void IniteView(){
+        //to do for init view
+        mtv_display_date = rootview.findViewById(R.id.tv_Display_Date);
+        listView = rootview.findViewById(R.id.listview);
+        mtv_display_norecords = rootview.findViewById(R.id.tv_no_records);
+        mtv_display_date.setText(date);
+        relativeLayout_one = rootview.findViewById(R.id.frame_one);
+        relativeLayout_two = rootview.findViewById(R.id.frame_two);
         //to doff
         listViewAdapter = new MyListViewAdapter(getContext());
-        adapterListview();
-        addListenerToListView();
-        return view;
-    }
-
-    public void Flush_mainFrame(){
-        records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
-        if(records.size() != 0){
-            if(listViewAdapter == null){
-                listViewAdapter = new MyListViewAdapter(getContext());
-            }
-            // to flush data
-            adapterListview();
-        }else {
-            //如果数据被删完了,无法刷新逻辑，就隐藏
-            relativeLayout_one.setVisibility(View.GONE);
-            relativeLayout_two.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void adapterListview(){
-        records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
         listViewAdapter.setRecords(records);//传递records
+        //adapter list view
         listViewAdapter.notifyDataSetChanged();
         listView.setAdapter(listViewAdapter);
         if(records.size() == 0){
@@ -87,29 +71,40 @@ public class MainFrame extends Fragment {
         }else {
             relativeLayout_two.setVisibility(View.GONE);
         }
+        //set listener to list view
+        addListenerToListView();
+    }
+
+    public void Flush_mainFrame(){
+        records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
+        if(listViewAdapter == null){
+            listViewAdapter = new MyListViewAdapter(getActivity().getApplicationContext());
+        }
+        listViewAdapter.setRecords(records);//传递records
+        listView.setAdapter(listViewAdapter);
+        if(records.size()>0){
+            rootview.findViewById(R.id.frame_two).setVisibility(View.GONE);
+        }
     }
 
     public void addListenerToListView(){
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ItemsDialogFragment itemsDialogFragment = new ItemsDialogFragment();
-                itemsDialogFragment.show("", new String[]{"编辑", "删除"}, getFragmentManager(), (dialog, which) -> {
-                    switch (which){
-                        case 0:
-                            // to edit
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            ItemsDialogFragment itemsDialogFragment = new ItemsDialogFragment();
+            itemsDialogFragment.show("", new String[]{"编辑", "删除"}, getFragmentManager(), (dialog, which) -> {
+                switch (which){
+                    case 0:
+                        // to edit
 
-                            break;
-                        case 1:
-                            //to del
-                            if(records.get(position)!=null){
-                                del(records.get(position).getUuid());
-                            }
-                            break;
-                    }
-                });
-                return true;
-            }
+                        break;
+                    case 1:
+                        //to del
+                        if(records.get(position)!=null){
+                            del(records.get(position).getUuid());
+                        }
+                        break;
+                }
+            });
+            return true;
         });
     }
 
