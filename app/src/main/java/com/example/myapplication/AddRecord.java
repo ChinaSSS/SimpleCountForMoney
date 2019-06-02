@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 public class AddRecord extends AppCompatActivity implements View.OnClickListener , MyRecyclerviewAdapter.OnCategoryClicked {
     private static final String TAG = "AddRecord";
 
@@ -43,6 +45,9 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
     private Category category;
     private MyRecyclerviewAdapter myRecyclerviewAdapter;
     private Record record;
+    private boolean EditFlag = false;
+    private double amount;
+    private String remark = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,21 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
         ClickBack();
         ClickSwitch();
         ClickEnsure();
+
+        Record record1 = (Record) getIntent().getSerializableExtra("record");
+        if(record1 != null){
+            EditFlag = true;
+            this.record = record1;
+            //
+            category = record1.getCategory();
+            amount = record1.getAmount();
+            input = String.valueOf(amount);
+            mtv.setText(String.valueOf(amount));
+            remark = record1.getRemark();
+            met.setText(remark);
+            type = record1.getType()==1?TYPE.EXPEND: TYPE.INCOME;  //功能提升，因该能够配上对
+            myRecyclerviewAdapter.setType(type);
+        }
     }
 
     @Override
@@ -154,14 +174,11 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
         imageButton_ensure.setOnClickListener(v->{
             //create a obj(record)
             if(!input.equals("")){
-                record = new Record();
-                double amount = Double.valueOf(formatMoney());
-                String remark;
-                if(met.getText().toString().equals("")){
-                    remark = "";
-                }else {
-                    remark = met.getText().toString();
+                if(record == null){
+                    record = new Record();
                 }
+                amount = Double.valueOf(formatMoney());
+                remark = met.getText().toString().equals("")?"":met.getText().toString();
                 //to set data
                 record.setAmount(amount);
                 if(category == null&&(!input.equals(""))){
@@ -177,7 +194,11 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
                 record.setCategory(category);
                 record.setRemark(remark);
                 record.setType(type);
-                GlobalResourceMannager.getInstance().getHelper().addRecord(record);
+                if(EditFlag == true){
+                    GlobalResourceMannager.getInstance().getHelper().updateRecord(record.getUuid(),record);
+                }else {
+                    GlobalResourceMannager.getInstance().getHelper().addRecord(record);
+                }
                 // to return signal for flushing
                 setResult(RESULT_OK,new Intent());
                 finish();

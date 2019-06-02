@@ -92,7 +92,7 @@ public class MainFrame extends Fragment {
                 switch (which){
                     case 0:
                         // to edit
-
+                        edit(position);
                         break;
                     case 1:
                         //to del
@@ -128,8 +128,12 @@ public class MainFrame extends Fragment {
         localBroadcastManager.sendBroadcast(FlushMoneyInTickerView);
     }
 
-    public void edit(){
-
+    public void edit(int i){
+        Intent intent = new Intent(getActivity(),AddRecord.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("record",records.get(i));
+        intent.putExtras(bundle); //putExtras and putExtra is different
+        startActivityForResult(intent,MainActivity.RequestCode);
     }
 
 }
