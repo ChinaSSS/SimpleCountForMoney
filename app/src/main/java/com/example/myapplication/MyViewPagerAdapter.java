@@ -53,7 +53,7 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
             }
         }
         else {
-            Log.d(TAG," the frames is null");
+            Log.d(TAG,"mainframes is null");
         }
     }
 

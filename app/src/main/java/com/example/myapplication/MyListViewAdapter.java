@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 public class MyListViewAdapter extends BaseAdapter {
+    private static final String TAG = "MyListViewAdapter";
 
     private LinkedList<Record> records ;
     private Context mcontext ;
@@ -23,6 +25,7 @@ public class MyListViewAdapter extends BaseAdapter {
     //测试方法
     public void setRecords(LinkedList<Record> records){
         this.records = records;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -65,10 +68,10 @@ public class MyListViewAdapter extends BaseAdapter {
         String amount;
         if(record.getType()==1){
             amount = "- "+record.getAmount();
-        }else {{
+        }else {
             amount = "+ "+record.getAmount();
-        }}
-        viewHolder.mtv_money.setText(String.valueOf(amount));
+        }
+        viewHolder.mtv_money.setText(amount);
         return view;
     }
 
