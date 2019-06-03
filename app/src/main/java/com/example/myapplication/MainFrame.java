@@ -129,6 +129,7 @@ public class MainFrame extends Fragment {
     }
 
     public void edit(int i){
+        // to send the record to add_activity for edit ,in databash
         Intent intent = new Intent(getActivity(),AddRecord.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("record",records.get(i));
