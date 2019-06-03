@@ -82,6 +82,8 @@ public class MainFrame extends Fragment {
         listView.setAdapter(listViewAdapter);
         if(records.size()>0){
             rootview.findViewById(R.id.frame_two).setVisibility(View.GONE);
+        }else {
+            rootview.findViewById(R.id.frame_two).setVisibility(View.VISIBLE);
         }
     }
 
