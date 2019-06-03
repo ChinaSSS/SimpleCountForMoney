@@ -40,6 +40,7 @@ public class MainFrame extends Fragment {
         this.date = date;
         records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
         localBroadcastManager = LocalBroadcastManager.getInstance(GlobalResourceMannager.getInstance().getContext());
+        Log.d(TAG," mainframe contructor is be called");
     }
 
     //此方法耗时
@@ -49,6 +50,7 @@ public class MainFrame extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.main_frame,container,false);
         IniteView();
+        Log.d(TAG,"the mainframes is on create view ");
         return rootview;
     }
 
@@ -74,14 +76,22 @@ public class MainFrame extends Fragment {
     }
 
     public void Flush_mainFrame(){
-        records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
-        if(listViewAdapter == null){
-            listViewAdapter = new MyListViewAdapter(GlobalResourceMannager.getInstance().getContext());
-        }
-        listViewAdapter.setRecords(records);//传递records
-        listView.setAdapter(listViewAdapter);
-        if(records.size()>0){
-            rootview.findViewById(R.id.frame_two).setVisibility(View.GONE);
+        //这里先调用的时候布局还未加载出来，调用的时候listview是null，然后等待布局文件加载出来的时候，系统会自动再次调用此函数.
+        if(listView != null){
+            records = GlobalResourceMannager.getInstance().getHelper().searchRecords(date,arrangeMode.DESC);
+            if(listViewAdapter == null){
+                listViewAdapter = new MyListViewAdapter(GlobalResourceMannager.getInstance().getContext());
+            }
+            listViewAdapter.setRecords(records);//传递records
+            listView.setAdapter(listViewAdapter);
+            if(records.size()>0){
+                rootview.findViewById(R.id.frame_two).setVisibility(View.GONE);
+            }else {
+                rootview.findViewById(R.id.frame_two).setVisibility(View.VISIBLE);
+            }
+            Log.d(TAG," the mainframe flush is be called ，date :"+date);
+        }else {
+            Log.d(TAG," listview is null");
         }
     }
 
@@ -129,6 +139,7 @@ public class MainFrame extends Fragment {
     }
 
     public void edit(int i){
+        // to send the record to add_activity for edit ,in databash
         Intent intent = new Intent(getActivity(),AddRecord.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("record",records.get(i));

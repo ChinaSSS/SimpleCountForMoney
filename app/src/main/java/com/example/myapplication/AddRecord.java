@@ -92,19 +92,35 @@ public class AddRecord extends AppCompatActivity implements View.OnClickListener
         ClickSwitch();
         ClickEnsure();
 
-        Record record1 = (Record) getIntent().getSerializableExtra("record");
-        if(record1 != null){
-            EditFlag = true;
-            this.record = record1;
-            //
-            category = record1.getCategory();
-            amount = record1.getAmount();
-            input = String.valueOf(amount);
-            mtv.setText(String.valueOf(amount));
-            remark = record1.getRemark();
-            met.setText(remark);
-            type = record1.getType()==1?TYPE.EXPEND: TYPE.INCOME;  //功能提升，因该能够配上对
-            myRecyclerviewAdapter.setType(type);
+//        Record record1 = (Record) getIntent().getSerializableExtra("record");
+//        if(record1 != null){
+//            EditFlag = true;
+//            this.record = record1;
+//            //set current ui display
+//            category = record1.getCategory();
+//            amount = record1.getAmount();
+//            input = String.valueOf(amount);
+//            mtv.setText(String.valueOf(amount));
+//            remark = record1.getRemark();
+//            met.setText(remark);
+//            type = record1.getType()==1?TYPE.EXPEND: TYPE.INCOME;  //功能提升，因该能够配上对
+//            myRecyclerviewAdapter.setType(type);
+//        }
+        isEditCase();
+    }
+
+    public void isEditCase(){
+        Record record = (Record) getIntent().getSerializableExtra("record");
+        if(record != null){
+            //set ui
+            mtv.setText(String.valueOf(record.getAmount()));
+            met.setText(record.getRemark());
+            myRecyclerviewAdapter.setSelected(record.getCategory().getName());
+            TYPE type = record.getType()==1?TYPE.EXPEND:TYPE.INCOME;
+            myRecyclerviewAdapter.setCurrentUI(type,record.getCategory().getName());
+            //set params
+            this.record = record;
+            input = String.valueOf(record.getAmount());
         }
     }
 

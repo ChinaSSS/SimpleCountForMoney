@@ -22,6 +22,10 @@ public class MyRecyclerviewAdapter extends RecyclerView.Adapter<MyRecyclerviewAd
     private String selected;
     private OnCategoryClicked onCategoryClicked;
 
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
     public void setType(TYPE type) {
         if(type==TYPE.EXPEND){
             categories = GlobalResourceMannager.getInstance().getExpend();
@@ -29,6 +33,16 @@ public class MyRecyclerviewAdapter extends RecyclerView.Adapter<MyRecyclerviewAd
             categories = GlobalResourceMannager.getInstance().getIncome();
         }
         selected = categories.get(0).getName();
+        notifyDataSetChanged();
+    }
+
+    public void setCurrentUI(TYPE type,String selected){
+        if(type == TYPE.EXPEND){
+            categories = GlobalResourceMannager.getInstance().getExpend();
+        }else {
+            categories = GlobalResourceMannager.getInstance().getIncome();
+        }
+        this.selected = selected;
         notifyDataSetChanged();
     }
 
